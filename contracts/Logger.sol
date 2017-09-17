@@ -9,13 +9,21 @@ contract Logger {
 
   event Logging(address _from, string _ipfsHash, uint _logged);
 
-  function Logger(string _ipfsHash) {
+  modifier isValidIPFS(bool isValid) {
+    if (!isValid) {
+      revert();
+    } else {
+      _;
+    }
+  }
+
+  function Logger(string _ipfsHash, bool isValid) isValidIPFS(isValid) {
     owner = msg.sender;
     ipfsHash = _ipfsHash;
     logged = now;
   }
 
-  function logEvent(string _ipfsHash, bool isValid) {
+  function logEvent(string _ipfsHash, bool isValid) isValidIPFS(isValid) {
     if (!isValid) {
       revert();
     }
