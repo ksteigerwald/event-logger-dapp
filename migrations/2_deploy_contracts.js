@@ -1,5 +1,5 @@
-//var MetaCoin = artifacts.require("./MetaCoin.sol");
+var Logger = artifacts.require("./Logger.sol");
 
 module.exports = function(deployer) {
-//k  deployer.deploy(MetaCoin);
+  deployer.deploy(Logger);
 };

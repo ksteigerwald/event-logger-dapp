@@ -1,0 +1,21 @@
+{
+  "event": [
+    "This is a test file",
+    "upload me to IPFS" ],
+  "object": {
+    "key": "value",
+    "array": [
+      {
+        "null_value": null
+      },
+      {
+        "boolean": true
+      },
+      {
+        "integer": 1
+      }
+    ]
+  },
+  "paragraph": "Blank lines denote\nparagraph breaks\n",
+  "content": "Or we\ncan auto\nconvert line breaks\nto save space"
+}
