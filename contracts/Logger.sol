@@ -36,4 +36,11 @@ contract Logger {
     return ipfsHash;
   }
 
+ function disable() {
+   if (msg.sender != owner) {
+     revert();
+   }
+
+   selfdestruct(owner);
+ }
 }
