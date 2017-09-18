@@ -2,10 +2,9 @@ pragma solidity ^0.4.13;
 
 contract Logger {
 
-  address owner;
-  uint logged;
+  address public owner;
+  uint public logged;
   string public ipfsHash;
-  address public lastSender;
 
   event Logging(address _from, string _ipfsHash, uint _logged);
 
@@ -17,10 +16,8 @@ contract Logger {
     }
   }
 
-  function Logger(string _ipfsHash, bool isValid) isValidIPFS(isValid) {
-    owner = msg.sender;
-    ipfsHash = _ipfsHash;
-    logged = now;
+  function getLastHash() constant returns (string) {
+    return ipfsHash;
   }
 
   function logEvent(string _ipfsHash, bool isValid) isValidIPFS(isValid) {
@@ -32,9 +29,13 @@ contract Logger {
     Logging(msg.sender, ipfsHash, now);
   }
 
-  function getLastHash() constant returns (string) {
-    return ipfsHash;
+  function Logger(string _ipfsHash, bool isValid) isValidIPFS(isValid) {
+    owner = msg.sender;
+    ipfsHash = _ipfsHash;
+    logged = now;
   }
+
+
 
  function disable() {
    if (msg.sender != owner) {
@@ -43,4 +44,5 @@ contract Logger {
 
    selfdestruct(owner);
  }
+
 }
