@@ -6,3 +6,15 @@ added QmaamdrH6k4KCU4iENDmbZ7WaX93vGwhu8snUeVF2xTMuP event-logger-dapp/some-extr
 added QmPDYXiRnE3MUyJ35oYts3YGmecpUppdMzUiG9nSx5mSte event-logger-dapp
 
 
+#install ipfs 
+
+osx: brew install ipfs
+
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["*"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+
+ipfs daemon 
+
+#Webroot
+npm install
