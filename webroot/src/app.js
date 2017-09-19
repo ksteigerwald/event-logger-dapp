@@ -18,17 +18,22 @@ ipfs.localProvider = { host: '127.0.0.1', port: '5001', protocol: 'http', root: 
 
 ipfs.setProvider(ipfs.localProvider)
 
-console.log("Hello from app.js")
-
-ipfs.cat("QmUP9sEPXPXuf4mPJs4ZthTcXcZwdsAk1D6Lizb8Frhcb3", function(err, text) {
-	if (err) throw err;
-	console.log("text:", text); 	// "Testing..."
-});
-
 var DocManager = (function () {
 
 	const $doc = document.getElementById("doc")
 	
+	function findDoc() {
+		document.getElementById("Logging").addEventListener('click', function(e){
+			if (e.target.matches('a.ipfsHash')) {
+				e.stopPropagation();
+				let hash = e.target.innerHTML;
+				ipfs.catJson(hash, (e, doc) => {
+					$doc.value = doc;
+				})
+			}
+		});
+	}
+
 	function isJSON(text){
 		try{
 			JSON.parse(text);
@@ -39,6 +44,13 @@ var DocManager = (function () {
 		}
 	}
 
+	function docUpdate() {
+		$doc.value = "Document sending..."	
+		console.log("----- docUpdate");
+		setTimeout(() => {
+			$doc.value = JSON.stringify({ root: [ "put your json doc here"]});
+		}, 2000);
+	}
 	function add(input) {
 		if( !isJSON(input)) return false
 
@@ -46,22 +58,20 @@ var DocManager = (function () {
 			if (err) {
 				console.log("Could not submit document");
 			}
-
+			console.log("----- docUpdate", hash);
+			docUpdate();
 			ContractManager.send(hash);
 		});
 	}
 
-	function read() {
-		console.log("hitreeadadd")
-	}
 
 	function init() {
 		$doc.value = JSON.stringify({ root: [ "put your json doc here"]});
+		findDoc();
 	}
 
 	return {
 		add : add,
-		read : read,
 		init : init
 	}
 })()
@@ -117,7 +127,7 @@ var ContractManager = (function () {
 	function li(item) {
 		return `<tr>
 			<td>${item.from}</td>
-			<td>${item.ipfsHash}</td>
+			<td><a class="ipfsHash">${item.ipfsHash}</a></td>
 			<td>${item.logged}</td>
 		</tr>`
 	}
