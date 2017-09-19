@@ -22,3 +22,4 @@ ipfs daemon
 #Webroot
 npm install
 
+geth --fast --cache=1048 --testnet  --password .password --unlock 0 --rpc --rpcapi "db,eth,net,web3,admin,personal" --rpccorsdomain '*' --rpcaddr localhost --rpcport 8545  --wsorigins="*" --ws --wsapi "db,eth,net,web3,admin,personal"

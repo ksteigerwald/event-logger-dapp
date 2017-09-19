@@ -1,0 +1,1 @@
+geth --fast --cache=1048 --testnet --unlock "0x422244F99c97993cFE5CA3B2E1A4Be589df24080" --password ~/Desktop/.password --unlock 0 --rpc --rpcapi "db,eth,net,web3,admin,personal" --rpccorsdomain '*' --rpcaddr localhost --rpcport 8545  --wsorigins="*" --ws --wsapi "db,eth,net,web3,admin,personal"
