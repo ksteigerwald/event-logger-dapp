@@ -21,7 +21,8 @@ ipfs.setProvider(ipfs.localProvider)
 var DocManager = (function () {
 
 	const $doc = document.getElementById("doc")
-	
+	const $dummyJson = JSON.stringify({ root: [ "put your json doc here"]});
+
 	function findDoc() {
 		document.getElementById("Logging").addEventListener('click', function(e){
 			if (e.target.matches('a.ipfsHash')) {
@@ -46,11 +47,11 @@ var DocManager = (function () {
 
 	function docUpdate() {
 		$doc.value = "Document sending..."	
-		console.log("----- docUpdate");
 		setTimeout(() => {
-			$doc.value = JSON.stringify({ root: [ "put your json doc here"]});
+			$doc.value = $dummyJson 
 		}, 2000);
 	}
+
 	function add(input) {
 		if( !isJSON(input)) return false
 
@@ -58,15 +59,13 @@ var DocManager = (function () {
 			if (err) {
 				console.log("Could not submit document");
 			}
-			console.log("----- docUpdate", hash);
 			docUpdate();
 			ContractManager.send(hash);
 		});
 	}
 
-
 	function init() {
-		$doc.value = JSON.stringify({ root: [ "put your json doc here"]});
+		$doc.value = $dummyJson;
 		findDoc();
 	}
 
@@ -79,24 +78,22 @@ var DocManager = (function () {
 var ContractManager = (function () {
 
 	const contractAddress = "0x70780fbd60ce921a04947c45353e5a925f4550aa"; //on ropsten
-	const wallet = "0xE3Af82E76ea98616205bf526Aa3B403e8845F270";
+	const wallet = "0xE3Af82E76ea98616205bf526Aa3B403e8845F270"; //your wallet here
 	var contract;
 
 
 	const abi = [ { "constant": false, "inputs": [], "name": "disable", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getLastHash", "outputs": [ { "name": "", "type": "string", "value": "QmUP9sEPXPXuf4mPJs4ZthTcXcZwdsAk1D6Lizb8Frhcb3" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "logged", "outputs": [ { "name": "", "type": "uint256", "value": "1505705638" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [ { "name": "", "type": "address", "value": "0xe3af82e76ea98616205bf526aa3b403e8845f270" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "_ipfsHash", "type": "string" }, { "name": "isValid", "type": "bool" } ], "name": "logEvent", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "ipfsHash", "outputs": [ { "name": "", "type": "string", "value": "QmUP9sEPXPXuf4mPJs4ZthTcXcZwdsAk1D6Lizb8Frhcb3" } ], "payable": false, "type": "function" }, { "inputs": [ { "name": "_ipfsHash", "type": "string", "index": 0, "typeShort": "string", "bits": "", "displayName": "&thinsp;<span class=\"punctuation\">_</span>&thinsp;ipfs Hash", "template": "elements_input_string", "value": "QmaamdrH6k4KCU4iENDmbZ7WaX93vGwhu8snUeVF2xTMuP" }, { "name": "isValid", "type": "bool", "index": 1, "typeShort": "bool", "bits": "", "displayName": "is Valid", "template": "elements_input_bool", "value": true } ], "payable": false, "type": "constructor" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "_from", "type": "address" }, { "indexed": false, "name": "_ipfsHash", "type": "string" }, { "indexed": false, "name": "_logged", "type": "uint256" } ], "name": "Logging", "type": "event" } ];
 
 	function send(ipfsHash) {
-		console.log("SEND IN:", ipfsHash,contract);
 		contract.methods.logEvent(ipfsHash, true).send({ from: wallet }, (err, val) => {
-			console.log("----- IN ----");
-			console.log(err, val);
+			if (err) {
+				console.error(err);
+				return
+			}
 		});
 	}
 
 	function listen() {
-
-		console.log("--- listening ---");
-
 		contract.events.Logging({
 			filter: {}, // Using an array means OR: e.g. 20 or 23
 			fromBlock: 0
@@ -141,7 +138,6 @@ var ContractManager = (function () {
 	}
 
 	function logOldEvents() {
-		console.log("-- enter log old events --");
 		contract.getPastEvents('Logging', {
 			fromBlock: 0,
 			toBlock: 'latest'
